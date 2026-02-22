@@ -178,7 +178,7 @@ function App() {
                         // 解构field，移除key属性
                         const { key, ...restField } = field;
                         return (
-                          <Card key={key} style={{ marginBottom: 0, borderBottom: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: 0, boxShadow: 'none' }} bodyStyle={{ padding: '8px 0' }}>
+                          <Card key={key} style={{ marginBottom: 0, borderBottom: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: 0, boxShadow: 'none' }} styles={{ body: { padding: '8px 0' } }}>
                             <Space orientation="horizontal" style={{ width: '100%', alignItems: 'center' }}>
                               <Form.Item {...restField} name={[field.name, 'type']} label="类型" style={{ flex: 1, marginRight: 8, marginBottom: 0 }}>
                                 <Input placeholder="如：邮箱、电话、个人网站等" />

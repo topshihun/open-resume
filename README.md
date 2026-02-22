@@ -1,22 +1,19 @@
 # Open Resume
 
-一个基于 Bun + React + Ant Design 的简历生成器，支持实时编辑和 PDF 导出功能。
+一个基于 Bun + React + Ant Design 的简历编辑与导出工具，提供表单化编辑、实时预览与 PDF 导出。
 
-## 功能特点
+## 概要
 
-- 🎨 **实时预览**：左边编辑，右边实时显示 PDF 渲染效果
-- 📋 **结构化编辑**：包含姓名、职位、联系方式、个人简介、工作经历、教育背景、技能等模块
-- 📄 **PDF 导出**：一键导出简历为 PDF 文件
-- 🔄 **滚动同步**：左右两边滚动条同步，方便查看和修改
-- 🎯 **响应式设计**：适配不同屏幕尺寸
-- 📦 **基于 Bun**：使用 Bun 进行依赖管理和运行
+- 左侧为可编辑表单，右侧为实时渲染的简历预览；支持图片上传、工作/教育/项目条目管理。
+- 可通过页面顶部的“导出PDF”按钮将预览内容导出为 PDF（使用 html2canvas + jsPDF）。
+- 同步滚动已实现，便于在编辑与预览间对照查看。
 
 ## 技术栈
 
-- **前端框架**：React 18
-- **构建工具**：Bun
-- **UI 组件库**：Ant Design
-- **PDF 生成**：html2canvas + jsPDF
+- 前端：React 19
+- UI：Ant Design 6
+- 运行时/工具：Bun
+- PDF 导出：html2canvas + jsPDF
 
 ## 快速开始
 
@@ -28,8 +25,10 @@ bun install
 
 ### 启动开发服务器
 
+本项目在 package.json 中定义了脚本，使用 Bun 运行：
+
 ```bash
-bun dev
+bun run dev
 ```
 
 ### 构建生产版本
@@ -40,31 +39,42 @@ bun run build
 
 ### 启动生产服务器
 
+本仓库的 `start` 脚本在 package.json 中定义为在生产环境下使用 Bun 启动内置服务：
+
 ```bash
-bun start
+bun run start
 ```
 
-## 项目结构
+（在 Windows PowerShell 中直接运行内联环境变量赋值的脚本可能需要调整；建议使用 `bun run start` 来执行 package.json 中的脚本。）
+
+## 项目结构（关键文件）
 
 ```
 open-resume/
 ├── src/
-│   ├── App.tsx          # 主应用组件
-│   ├── frontend.tsx     # React 应用入口
-│   ├── index.ts         # 后端服务器入口
-│   ├── index.css        # 全局样式
-│   └── index.html       # HTML 模板
-├── bunfig.toml          # Bun 配置文件
-├── package.json         # 项目配置和依赖
-├── tsconfig.json        # TypeScript 配置
-└── README.md            # 项目说明
+│   ├── App.tsx          # 主应用：编辑表单、实时预览、导出 PDF
+│   ├── frontend.tsx     # React 客户端入口（挂载点 + HMR 支持）
+│   ├── index.ts         # Bun HTTP 服务器入口，用于静态和简单 API 路由
+│   ├── index.html       # HTML 模板
+│   └── components/      # 按模块划分的简历组件（Header, Summary, Education, 等）
+├── package.json         # 脚本与依赖（含 antd, html2canvas, jspdf 等）
+├── bunfig.toml          # Bun 配置
+├── tsconfig.json
+└── README.md
 ```
 
-## 使用方法
+## 使用说明
 
-1. 在左边编辑区填写你的简历信息
-2. 右边会实时显示预览效果
-3. 点击右上角的「导出PDF」按钮，将简历导出为 PDF 文件
+1. 在编辑区填写或添加联系方式、工作经历、教育、技能与项目条目。
+2. 右侧会实时渲染当前表单数据，可通过滚动条同步对齐查看。
+3. 点击页面顶部的“导出PDF”按钮，页面会使用 `html2canvas` 截图并由 `jsPDF` 生成 A4 PDF 文件。
+
+## 要点 / 已实现特性
+
+- 表单化编辑（使用 Ant Design Form + Form.List 实现动态条目）
+- 图片上传与预览（`src/components/PhotoUpload`）
+- 导出为 PDF（`html2canvas` + `jsPDF`，入口元素 id 为 `resume-preview`）
+- Bun 开发服务器支持 HMR
 
 ## 许可证
 

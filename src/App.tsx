@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Typography, Card, Form, Divider, Space, Switch } from 'antd';
-import { DownloadOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import { Button, Input, Typography, Card, Form, Divider, Space, Switch, Alert } from 'antd';
+import { DownloadOutlined, PlusOutlined, MinusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import './index.css';
 
-// 生成预览HTML的函数
+// 生成单页预览HTML的函数（限制在A4页面内）
 const generatePreviewHTML = (data: any) => {
   return `
     <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; line-height: 1.6;">
@@ -114,6 +114,51 @@ const generatePreviewHTML = (data: any) => {
   `;
 };
 
+// 生成单页PDF的HTML（用于预览和导出）
+const generateSinglePageHTML = (data: any) => {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+          body { 
+            margin: 0; 
+            padding: 0; 
+            width: 210mm; 
+            min-height: 297mm; 
+            background: white;
+            font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            box-sizing: border-box;
+            transform: none !important;
+            zoom: 1 !important;
+            overflow: hidden; /* 禁用body滚动条 */
+          }
+          #a4-content {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm;
+            box-sizing: border-box;
+            background: white;
+            overflow: hidden; /* 禁用内容区域滚动条 */
+          }
+          html {
+            overflow: hidden; /* 禁用html滚动条 */
+          }
+        </style>
+      </head>
+      <body>
+        <div id="a4-content">
+          ${generatePreviewHTML(data)}
+        </div>
+      </body>
+    </html>
+  `;
+};
+
 // 导入组件
 import PhotoUpload from './components/PhotoUpload';
 
@@ -124,15 +169,89 @@ function App() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [previewData, setPreviewData] = useState<any>({});
+  const [contentExceedsLimit, setContentExceedsLimit] = useState(false);
   
   // 照片上传处理
   const handlePhotoChange = (value: string) => {
     form.setFieldsValue({ photo: value });
   };
   
-  // 实时更新预览数据
+  // 实时更新预览数据并检查内容长度
   const handleFormChange = (_: any, allValues: any) => {
     setPreviewData(allValues);
+    
+    // 检查内容是否超过单页限制
+    const totalHeight = calculateContentHeight(allValues);
+    const A4_CONTENT_HEIGHT_PX = 1123 - 40; // A4高度减去边距
+    setContentExceedsLimit(totalHeight > A4_CONTENT_HEIGHT_PX);
+  };
+  
+  // 计算内容总高度
+  const calculateContentHeight = (data: any) => {
+    const HEIGHT_ESTIMATES = {
+      header: 100,
+      contactSection: 50,
+      contactItem: 25,
+      sectionHeader: 40,
+      paragraph: (text: string) => Math.ceil(text.split('\n').length * 20 + 20),
+      experienceItem: (exp: any) => {
+        const baseHeight = 80;
+        const descHeight = exp.description ? Math.ceil(exp.description.split('\n').length * 20 + 10) : 0;
+        return baseHeight + descHeight;
+      },
+      educationItem: (edu: any) => {
+        const baseHeight = 80;
+        const descHeight = edu.description ? Math.ceil(edu.description.split('\n').length * 20 + 10) : 0;
+        return baseHeight + descHeight;
+      },
+      projectItem: (project: any) => {
+        const baseHeight = 60;
+        const descHeight = project.description ? Math.ceil(project.description.split('\n').length * 20 + 10) : 0;
+        return baseHeight + descHeight;
+      },
+      skillsSection: 60
+    };
+    
+    let totalHeight = 0;
+    
+    // 头部信息
+    totalHeight += HEIGHT_ESTIMATES.header;
+    
+    // 联系方式
+    if (data.contacts && data.contacts.length > 0) {
+      const contactItems = data.contacts.filter((contact: any) => contact.value).length;
+      totalHeight += HEIGHT_ESTIMATES.contactSection + (contactItems * HEIGHT_ESTIMATES.contactItem);
+    }
+    
+    // 个人简介
+    if (data.summary) {
+      totalHeight += HEIGHT_ESTIMATES.sectionHeader + HEIGHT_ESTIMATES.paragraph(data.summary);
+    }
+    
+    // 工作经历
+    if (data.experience && data.experience.length > 0) {
+      totalHeight += data.experience.reduce((total: number, exp: any) => 
+        total + HEIGHT_ESTIMATES.experienceItem(exp), HEIGHT_ESTIMATES.sectionHeader);
+    }
+    
+    // 教育背景
+    if (data.education && data.education.length > 0) {
+      totalHeight += data.education.reduce((total: number, edu: any) => 
+        total + HEIGHT_ESTIMATES.educationItem(edu), HEIGHT_ESTIMATES.sectionHeader);
+    }
+    
+    // 技能
+    if (data.skills || data.backendSkills) {
+      totalHeight += HEIGHT_ESTIMATES.sectionHeader + HEIGHT_ESTIMATES.skillsSection;
+    }
+    
+    // 项目经历
+    if (data.projects && data.projects.length > 0) {
+      totalHeight += data.projects.reduce((total: number, project: any) => 
+        total + HEIGHT_ESTIMATES.projectItem(project), HEIGHT_ESTIMATES.sectionHeader);
+    }
+    
+    return totalHeight;
   };
   
   // 初始加载时获取一次值
@@ -435,54 +554,41 @@ function App() {
         
         {/* 右边预览区 - 使用iframe确保绝对固定A4尺寸 */}
         <div className="resume-preview">
-          <iframe 
-            id="a4-preview-iframe"
-            title="A4简历预览"
-            srcDoc={`
-              <!DOCTYPE html>
-              <html>
-                <head>
-                  <meta charset="utf-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1">
-                  <style>
-                    body { 
-                      margin: 0; 
-                      padding: 0; 
-                      width: 210mm; 
-                      min-height: 297mm; 
-                      background: white;
-                      font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-                      font-size: 14px;
-                      line-height: 1.5;
-                      box-sizing: border-box;
-                      transform: none !important;
-                      zoom: 1 !important;
-                    }
-                    #a4-content {
-                      width: 210mm;
-                      min-height: 297mm;
-                      padding: 20mm;
-                      box-sizing: border-box;
-                      background: white;
-                    }
-                  </style>
-                </head>
-                <body>
-                  <div id="a4-content">
-                    ${generatePreviewHTML(previewData)}
-                  </div>
-                </body>
-              </html>
-            `}
-            style={{
-              width: '794px', // 210mm in pixels
-              height: '1123px', // 297mm in pixels
-              border: 'none',
-              boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)',
+          {contentExceedsLimit ? (
+            <div style={{ 
+              width: '794px', 
+              height: '1123px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
               transform: 'scale(0.8)',
               transformOrigin: 'top center'
-            }}
-          />
+            }}>
+              <Alert
+                message="内容超出A4页面限制"
+                description="您的内容已超过单页A4纸的容量。建议精简内容或删除部分信息以确保简历的专业性和可读性。"
+                type="warning"
+                showIcon
+                icon={<ExclamationCircleOutlined />}
+                style={{ width: '80%', maxWidth: '500px' }}
+              />
+            </div>
+          ) : (
+            <iframe 
+              id="a4-preview-iframe"
+              title="A4简历预览"
+              srcDoc={generateSinglePageHTML(previewData)}
+              style={{
+                width: '794px', // 210mm in pixels
+                height: '1123px', // 297mm in pixels
+                border: 'none',
+                boxShadow: '0 0 15px rgba(0, 0, 0, 0.1)',
+                transform: 'scale(0.8)',
+                transformOrigin: 'top center',
+                overflow: 'hidden' // 隐藏滚动条
+              }}
+            />
+          )}
         </div>
       </div>
     </div>

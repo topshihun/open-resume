@@ -49,8 +49,11 @@ body {
 .resume-preview {
   flex: 1;
   padding: 20px;
-  overflow-y: auto;
-  background-color: #ffffff;
+  overflow: auto;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 /* 预览头部 */
@@ -129,15 +132,9 @@ body {
   margin-bottom: 0;
 }
 
-/* 调整预览区域的样式，使其更像真实简历 */
-#resume-preview {
-  max-width: 800px;
-  margin: 0 auto;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  padding: 50px;
-  background-color: #ffffff;
-  border-radius: 8px;
-}
+
+
+
 
 /* 预览头部样式 */
 .preview-header {
@@ -366,16 +363,7 @@ body {
     display: none;
   }
   
-  .resume-preview {
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-  
-  #resume-preview {
-    box-shadow: none;
-    border: 1px solid #e0e0e0;
-  }
+
   
   .preview-header::after {
     background: #000000;
@@ -405,10 +393,6 @@ body {
   .resume-editor,
   .resume-preview {
     height: 50vh;
-  }
-  
-  #resume-preview {
-    padding: 30px;
   }
   
   .item-header {

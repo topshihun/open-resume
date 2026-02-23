@@ -56,6 +56,15 @@ body {
   align-items: flex-start;
 }
 
+/* A4尺寸预览容器 */
+.resume-preview-content {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
 /* 预览头部 */
 .preview-header {
   text-align: center;
@@ -136,11 +145,15 @@ body {
 .resume-preview-content {
   font-family: 'Microsoft YaHei', Arial, sans-serif;
   line-height: 1.6;
-  padding: 20px;
+  padding: 20mm;
   background: white;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  min-height: 600px;
+  width: 210mm;
+  min-height: 297mm;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  box-sizing: border-box;
   overflow: auto;
 }
 

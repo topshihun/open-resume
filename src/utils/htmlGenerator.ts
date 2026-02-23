@@ -6,34 +6,62 @@ import type { ResumeData } from '../types';
 export const generatePreviewHTML = (data: ResumeData): string => {
   return `
     <div style="font-family: 'Microsoft YaHei', Arial, sans-serif; line-height: 1.6;">
-      <!-- 头部信息 -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <div>
-          <h1 style="margin: 0; font-size: 24px; color: #333;">${data.name || ''}</h1>
-          <p style="margin: 5px 0 0 0; font-size: 16px; color: #666;">${data.title || ''}</p>
-        </div>
-        ${data.photo ? `<img src="${data.photo}" style="width: 80px; height: 80px; border-radius: 4px; object-fit: cover;" />` : ''}
-      </div>
-      
-      <!-- 联系方式 -->
-      ${data.contacts && data.contacts && data.contacts.length > 0 ? `
-        <div style="margin-bottom: 20px;">
-          <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 2px solid #1890ff; padding-bottom: 5px;">联系方式</h3>
-          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-            ${data.contacts.map((contact) => 
-              contact.value ? `
-                <div style="display: flex; align-items: center;">
-                  <span style="font-weight: bold; margin-right: 5px;">${contact.type}:</span>
-                  ${contact.isLink ? 
-                    `<a href="${contact.value.startsWith('http') ? '' : 'https://'}${contact.value}" style="color: #1890ff; text-decoration: none;">${contact.value}</a>` : 
-                    `<span>${contact.value}</span>`
-                  }
+      <!-- 头部信息 - 整合姓名、联系方式和照片 -->
+      <div style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #1890ff;">
+        ${data.photo ? `
+          <!-- 有照片时的布局 -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <!-- 左侧信息区域 -->
+            <div style="flex: 1;">
+              <h1 style="margin: 0 0 15px 0; font-size: 28px; color: #333; font-weight: bold;">${data.name || ''}</h1>
+              
+              <!-- 联系方式整合到头部 -->
+              ${data.contacts && data.contacts && data.contacts.length > 0 ? `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px 20px;">
+                  ${data.contacts.map((contact) => 
+                    contact.value ? `
+                      <div style="display: flex; align-items: center; font-size: 14px;">
+                        <span style="font-weight: bold; margin-right: 8px; color: #666;">${contact.type}：</span>
+                        ${contact.isLink ? 
+                          `<a href="${contact.value.startsWith('http') ? '' : 'https://'}${contact.value}" style="color: #1890ff; text-decoration: none;">${contact.value}</a>` : 
+                          `<span style="color: #333;">${contact.value}</span>`
+                        }
+                      </div>
+                    ` : ''
+                  ).join('')}
                 </div>
-              ` : ''
-            ).join('')}
+              ` : ''}
+            </div>
+            
+            <!-- 右侧照片区域 -->
+            <div style="margin-left: 30px; flex-shrink: 0;">
+              <img src="${data.photo}" style="width: 100px; height: 130px; object-fit: cover; border: 2px solid #e8e8e8; border-radius: 4px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);" />
+            </div>
           </div>
-        </div>
-      ` : ''}
+        ` : `
+          <!-- 没有照片时的布局 -->
+          <div style="text-align: center;">
+            <h1 style="margin: 0 0 20px 0; font-size: 32px; color: #333; font-weight: bold;">${data.name || ''}</h1>
+            
+            <!-- 联系方式居中显示 -->
+            ${data.contacts && data.contacts && data.contacts.length > 0 ? `
+              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px 30px;">
+                ${data.contacts.map((contact) => 
+                  contact.value ? `
+                    <div style="display: flex; align-items: center; font-size: 14px; white-space: nowrap;">
+                      <span style="font-weight: bold; margin-right: 8px; color: #666;">${contact.type}：</span>
+                      ${contact.isLink ? 
+                        `<a href="${contact.value.startsWith('http') ? '' : 'https://'}${contact.value}" style="color: #1890ff; text-decoration: none;">${contact.value}</a>` : 
+                        `<span style="color: #333;">${contact.value}</span>`
+                      }
+                    </div>
+                  ` : ''
+                ).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `}
+      </div>
       
       <!-- 个人简介 -->
       ${data.summary ? `

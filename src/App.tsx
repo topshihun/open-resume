@@ -59,7 +59,6 @@ function App() {
   // 默认表单值
   const defaultValues: ResumeData = {
     name: '张三',
-    title: '前端开发工程师',
     photo: '',
     summary: '本人乐观开朗，在校成绩优异，自律能力强，具有良好的沟通能力和团队合作精神，可以使用英语进行工作交流。\n具有多年前端开发经验，熟悉React、Vue等前端框架，善于技术学习，持续关注互联网技术发展。\n求职意向：前端开发相关工作。',
     contacts: [
@@ -116,10 +115,6 @@ function App() {
           <Card title="简历编辑" variant="outlined">
             <Form form={form} layout="vertical" initialValues={defaultValues} onValuesChange={handleFormChange}>
               <Form.Item name="name" label="姓名">
-                <Input />
-              </Form.Item>
-              
-              <Form.Item name="title" label="职位">
                 <Input />
               </Form.Item>
               

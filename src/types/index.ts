@@ -28,7 +28,6 @@ export interface Project {
 
 export interface ResumeData {
   name?: string;
-  title?: string;
   photo?: string;
   summary?: string;
   contacts?: Contact[];

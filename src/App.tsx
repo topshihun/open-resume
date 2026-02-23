@@ -164,22 +164,34 @@ function App() {
         {/* 右边预览区 */}
         <div className="resume-preview">
           <Card title="简历预览" variant="outlined">
-            {contentExceedsLimit && (
-              <Alert
-                message="内容可能超过单页限制"
-                description="当前内容较多，导出PDF时可能无法完整显示在一页内。建议适当精简内容。"
-                type="warning"
-                showIcon
-                icon={<ExclamationCircleOutlined />}
-                style={{ marginBottom: 16 }}
+            {contentExceedsLimit ? (
+              <div>
+                <Alert
+                  message="内容可能超过单页限制"
+                  description="当前内容较多，导出PDF时可能无法完整显示在一页内。建议适当精简内容。"
+                  type="warning"
+                  showIcon
+                  icon={<ExclamationCircleOutlined />}
+                  style={{ marginBottom: 16 }}
+                />
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '40px 20px', 
+                  color: '#999',
+                  fontSize: '16px'
+                }}>
+                  <ExclamationCircleOutlined style={{ fontSize: '48px', marginBottom: '16px' }} />
+                  <p>内容过多，预览已禁用</p>
+                  <p style={{ fontSize: '14px', marginTop: '8px' }}>请精简内容后重新查看预览</p>
+                </div>
+              </div>
+            ) : (
+              <div 
+                id="a4-preview-content"
+                className="resume-preview-content"
+                dangerouslySetInnerHTML={{ __html: generatePreviewHTML(previewData) }}
               />
             )}
-            
-            <div 
-              id="a4-preview-content"
-              className="resume-preview-content"
-              dangerouslySetInnerHTML={{ __html: generatePreviewHTML(previewData) }}
-            />
           </Card>
         </div>
       </div>

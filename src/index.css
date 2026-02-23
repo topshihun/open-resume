@@ -132,9 +132,17 @@ body {
   margin-bottom: 0;
 }
 
-
-
-
+/* 预览内容样式 */
+.resume-preview-content {
+  font-family: 'Microsoft YaHei', Arial, sans-serif;
+  line-height: 1.6;
+  padding: 20px;
+  background: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  min-height: 600px;
+  overflow: auto;
+}
 
 /* 预览头部样式 */
 .preview-header {

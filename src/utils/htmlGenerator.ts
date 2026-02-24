@@ -106,19 +106,17 @@ export const generatePreviewHTML = (data: ResumeData): string => {
       ` : ''}
       
       <!-- 技能 -->
-      <div style="margin-bottom: 20px;">
-        <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 2px solid #1890ff; padding-bottom: 5px;">技能</h3>
-        ${data.skills ? `
-          <div style="margin-bottom: 10px;">
-            <strong>前端:</strong> ${data.skills}
-          </div>
-        ` : ''}
-        ${data.backendSkills ? `
-          <div>
-            <strong>后端:</strong> ${data.backendSkills}
-          </div>
-        ` : ''}
-      </div>
+      ${data.skills && Array.isArray(data.skills) && data.skills.length > 0 ? `
+        <div style="margin-bottom: 20px;">
+          <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 2px solid #1890ff; padding-bottom: 5px;">技能</h3>
+          ${data.skills.map((skill) => `
+            <div style="margin-bottom: 10px;">
+              ${skill.category ? `<strong>${skill.category}:</strong> ` : ''}
+              <span>${skill.description || ''}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
       
       <!-- 项目经历 -->
       ${data.projects && Array.isArray(data.projects) && data.projects.length > 0 ? `

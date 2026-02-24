@@ -26,6 +26,11 @@ export interface Project {
   description?: string;
 }
 
+export interface Skill {
+  category?: string;
+  description?: string;
+}
+
 export interface ResumeData {
   name?: string;
   photo?: string;
@@ -33,7 +38,6 @@ export interface ResumeData {
   contacts?: Contact[];
   experience?: Experience[];
   education?: Education[];
-  skills?: string;
-  backendSkills?: string;
+  skills?: Skill[];
   projects?: Project[];
 }

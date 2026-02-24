@@ -9,6 +9,7 @@ import ContactFields from './components/ContactFields';
 import ExperienceFields from './components/ExperienceFields';
 import EducationFields from './components/EducationFields';
 import ProjectFields from './components/ProjectFields';
+import SkillFields from './components/SkillFields';
 
 // 导入工具函数
 import { exportResumeToPDF } from './utils/pdfExport';
@@ -84,8 +85,10 @@ function App() {
         description: 'GPA: 3.8/4.0，专业排名前5%。\n获得国家奖学金、校级优秀学生等荣誉。'
       }
     ],
-    skills: 'React, JavaScript, TypeScript, HTML, CSS, Ant Design, Vue',
-    backendSkills: 'Node.js, Express, MongoDB',
+    skills: [
+      { category: '前端技能', description: 'React, JavaScript, TypeScript, HTML, CSS, Ant Design, Vue' },
+      { category: '后端技能', description: 'Node.js, Express, MongoDB' }
+    ],
     projects: [
       {
         name: '企业管理系统',
@@ -143,16 +146,7 @@ function App() {
               
               <Divider />
               
-              <Form.Item label="技能">
-                <Space direction="vertical" style={{ width: '100%' }}>
-                  <Form.Item name="skills" label="前端技能">
-                    <Input placeholder="例如：React, JavaScript, TypeScript, HTML, CSS" />
-                  </Form.Item>
-                  <Form.Item name="backendSkills" label="后端技能">
-                    <Input placeholder="例如：Node.js, Express, MongoDB" />
-                  </Form.Item>
-                </Space>
-              </Form.Item>
+              <SkillFields name="skills" />
               
               <Divider />
               

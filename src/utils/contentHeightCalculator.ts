@@ -60,8 +60,8 @@ export const calculateContentHeight = (data: ResumeData): number => {
   }
   
   // 技能
-  if (data.skills || data.backendSkills) {
-    totalHeight += HEIGHT_ESTIMATES.sectionHeader + HEIGHT_ESTIMATES.skillsSection;
+  if (data.skills && Array.isArray(data.skills) && data.skills.length > 0) {
+    totalHeight += HEIGHT_ESTIMATES.sectionHeader + (data.skills.length * 30);
   }
   
   // 项目经历

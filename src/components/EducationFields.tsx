@@ -58,7 +58,11 @@ const EducationFields: React.FC<EducationFieldsProps> = ({ name }) => {
                     </Form.Item>
                   </Space>
                   <Form.Item {...restField} name={[field.name, 'description']} label="描述">
-                    <Input.TextArea rows={3} />
+                    <Input.TextArea 
+                      rows={3} 
+                      autoSize={{ minRows: 3, maxRows: 15 }}
+                      style={{ resize: 'vertical' }}
+                    />
                   </Form.Item>
                   <Button 
                     type="text" 

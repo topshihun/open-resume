@@ -133,7 +133,11 @@ function App() {
               <Divider />
               
               <Form.Item name="summary" label="个人简介">
-                <TextArea rows={4} />
+                <TextArea 
+                  rows={4} 
+                  autoSize={{ minRows: 4, maxRows: 20 }}
+                  style={{ resize: 'vertical' }}
+                />
               </Form.Item>
               
               <Divider />

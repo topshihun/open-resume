@@ -43,7 +43,11 @@ const ExperienceFields: React.FC<ExperienceFieldsProps> = ({ name }) => {
                     <Input />
                   </Form.Item>
                   <Form.Item {...restField} name={[field.name, 'description']} label="工作描述">
-                    <Input.TextArea rows={3} />
+                    <Input.TextArea 
+                      rows={3} 
+                      autoSize={{ minRows: 3, maxRows: 15 }}
+                      style={{ resize: 'vertical' }}
+                    />
                   </Form.Item>
                   <Button 
                     type="text" 

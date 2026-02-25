@@ -110,9 +110,9 @@ export const generatePreviewHTML = (data: ResumeData): string => {
         <div style="margin-bottom: 20px;">
           <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333; border-bottom: 2px solid #1890ff; padding-bottom: 5px;">技能</h3>
           ${data.skills.map((skill) => `
-            <div style="margin-bottom: 10px;">
-              ${skill.category ? `<strong>${skill.category}:</strong> ` : ''}
-              <span>${skill.description || ''}</span>
+            <div style="margin-bottom: 12px; line-height: 1.6;">
+              ${skill.category ? `<div style="font-weight: bold; margin-bottom: 4px; color: #333;">${skill.category}</div>` : ''}
+              <div style="color: #666; white-space: pre-line; word-wrap: break-word;">${skill.description || ''}</div>
             </div>
           `).join('')}
         </div>

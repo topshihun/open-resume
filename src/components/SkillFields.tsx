@@ -27,7 +27,7 @@ const SkillFields: React.FC<SkillFieldsProps> = ({ name }) => {
                   }} 
                   styles={{ body: { padding: '8px 0' } }}
                 >
-                  <Space direction="vertical" style={{ width: '100%' }}>
+                  <Space orientation="vertical" style={{ width: '100%' }}>
                     <Space orientation="horizontal" style={{ width: '100%', alignItems: 'center' }}>
                       <Form.Item 
                         {...restField} 

@@ -78,6 +78,6 @@ export const calculateContentHeight = (data: ResumeData): number => {
  */
 export const checkContentExceedsLimit = (data: ResumeData): boolean => {
   const totalHeight = calculateContentHeight(data);
-  const A4_CONTENT_HEIGHT_PX = 1123 - 40; // A4高度减去边距
+  const A4_CONTENT_HEIGHT_PX = 1123 - 30; // A4高度减去新的边距(15mm*2 = 30mm)
   return totalHeight > A4_CONTENT_HEIGHT_PX;
 };

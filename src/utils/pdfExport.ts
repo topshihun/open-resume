@@ -16,7 +16,7 @@ export const exportResumeToPDF = async (): Promise<void> => {
     const tempContainer = document.createElement('div');
     tempContainer.style.width = '210mm';
     tempContainer.style.minHeight = '297mm';
-    tempContainer.style.padding = '20mm';
+    tempContainer.style.padding = '15mm';
     tempContainer.style.boxSizing = 'border-box';
     tempContainer.style.background = 'white';
     tempContainer.style.fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';

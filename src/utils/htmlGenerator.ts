@@ -165,7 +165,7 @@ export const generateSinglePageHTML = (data: ResumeData): string => {
           #a4-content {
             width: 210mm;
             min-height: 297mm;
-            padding: 20mm;
+            padding: 15mm;
             box-sizing: border-box;
             background: white;
             overflow: visible; /* 允许内容区域显示完整内容 */

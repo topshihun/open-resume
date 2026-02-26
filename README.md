@@ -7,7 +7,7 @@
 ![React](https://img.shields.io/badge/React-19.x-blue?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?logo=typescript)
 
-一个现代化的简历编辑与导出工具，基于 Bun + React + Ant Design 构建，提供表单化编辑、实时预览与 PDF 导出功能。
+一个现代化的简历编辑与导出工具，基于 Bun + React + Ant Design 构建，提供表单化编辑、实时预览、PDF 导出与 JSON 数据导入导出功能。
 
 [🚀 快速开始](#快速开始) • [📖 功能特性](#功能特性) • [🛠️ 技术栈](#技术栈) • [📁 项目结构](#项目结构)
 
@@ -18,6 +18,8 @@
 - 📝 **表单化编辑** - 左侧表单实时编辑，右侧实时预览
 - 🖼️ **图片上传** - 支持拖拽上传个人照片
 - 📄 **PDF 导出** - 一键导出为 A4 格式 PDF 文件
+- 📁 **数据导入导出** - 支持 JSON 格式的数据保存和恢复
+- 🎯 **悬浮球操作** - 集成所有导出功能的悬浮球组件
 - 🔄 **同步滚动** - 编辑区与预览区同步滚动，便于对照查看
 - 📱 **响应式设计** - 适配不同屏幕尺寸
 - 🎨 **美观界面** - 基于 Ant Design 的现代化 UI
@@ -32,6 +34,7 @@
 | **UI 组件库** | Ant Design 6 |
 | **运行时** | Bun 1.0+ |
 | **PDF 导出** | html2canvas + jsPDF |
+| **数据格式** | JSON（数据导入导出） |
 | **构建工具** | Bun Build |
 | **开发体验** | Hot Module Replacement (HMR) |
 
@@ -91,14 +94,16 @@ open-resume/
 │   │   ├── ExperienceFields.tsx # 工作经历表单组件
 │   │   ├── EducationFields.tsx # 教育背景表单组件
 │   │   ├── ProjectFields.tsx # 项目经历表单组件
-│   │   └── SkillFields.tsx  # 技能表单组件
+│   │   ├── SkillFields.tsx  # 技能表单组件
+│   │   └── FloatingActionButton.tsx # 悬浮球操作组件
 │   ├── types/               # 📋 TypeScript 类型定义
 │   │   └── index.ts         # 简历数据类型定义
 │   ├── utils/               # 🛠️ 工具函数
 │   │   ├── index.ts         # 工具函数导出
 │   │   ├── pdfExport.ts     # PDF 导出功能
 │   │   ├── htmlGenerator.ts # HTML 生成器
-│   │   └── contentHeightCalculator.ts # 内容高度计算
+│   │   ├── contentHeightCalculator.ts # 内容高度计算
+│   │   └── jsonExport.ts    # JSON 导入导出功能
 │   ├── App.tsx              # 🎯 主应用组件
 │   ├── frontend.tsx         # ⚛️ React 客户端入口
 │   ├── index.ts             # 🌐 Bun HTTP 服务器入口
@@ -126,12 +131,14 @@ open-resume/
 | **EducationFields** | 教育背景表单组件 |
 | **ProjectFields** | 项目经历表单组件 |
 | **SkillFields** | 技能表单组件 |
+| **FloatingActionButton** | 悬浮球操作组件，集成PDF/TOML导入导出功能 |
 
 ### 工具模块 (`src/utils/`)
 
 | 工具函数 | 功能描述 |
 |----------|----------|
 | **pdfExport** | PDF 导出功能封装（html2canvas + jsPDF） |
+| **jsonExport** | JSON 格式数据导入导出功能 |
 | **htmlGenerator** | HTML 内容生成器 |
 | **contentHeightCalculator** | 内容高度计算和单页限制检查 |
 
@@ -151,7 +158,46 @@ open-resume/
 5. **填写教育背景** - 添加教育经历信息
 6. **展示技能项目** - 填写技能和项目经历
 7. **实时预览** - 右侧区域实时显示简历效果
-8. **导出PDF** - 点击顶部"导出PDF"按钮生成简历文件
+8. **使用悬浮球操作** - 点击右下角悬浮球进行导出操作
+
+### 悬浮球操作指南
+
+项目右下角提供了悬浮球操作组件，点击后展开以下功能：
+
+- **PDF 导出** - 导出为 A4 格式 PDF 文件
+- **JSON 导出** - 保存简历数据为 JSON 格式文件
+- **JSON 导入** - 从 JSON 文件恢复简历数据
+
+#### JSON 数据格式说明
+
+JSON 文件包含完整的简历数据结构，便于：
+- **数据备份** - 保存当前简历状态
+- **版本控制** - 管理不同版本的简历
+- **数据迁移** - 在不同设备间同步简历数据
+- **跨平台兼容** - JSON 格式广泛支持，无需额外依赖
+
+JSON 文件示例片段：
+```json
+{
+  "name": "张三",
+  "summary": "个人简介内容...",
+  "contacts": [
+    {
+      "type": "邮箱",
+      "value": "zhangsan@example.com",
+      "isLink": true
+    }
+  ],
+  "experience": [
+    {
+      "company": "ABC科技有限公司",
+      "position": "前端开发工程师",
+      "period": "2023.01 - 至今",
+      "description": "工作描述..."
+    }
+  ]
+}
+```
 
 ### 高级功能
 
@@ -192,9 +238,11 @@ open-resume/
 - ✅ **表单化编辑** - 使用 Ant Design Form + Form.List 实现动态条目
 - ✅ **图片上传与预览** - 支持拖拽上传的图片组件
 - ✅ **PDF 导出** - `html2canvas` + `jsPDF`，支持 A4 格式
+- ✅ **JSON 导入导出** - 支持简历数据的保存和恢复
+- ✅ **悬浮球操作** - 集成所有导出功能的悬浮球组件
 - ✅ **内容限制检查** - 实时检测内容是否超过单页限制
 - ✅ **类型安全** - 完整的 TypeScript 支持
-- ✅ **热重载** - Bun 开发服务器支持 HMR
+- ✅ **热重载** - 开发服务器支持 HMR
 - ✅ **响应式设计** - 适配不同屏幕尺寸
 - ✅ **同步滚动** - 编辑区与预览区同步滚动
 

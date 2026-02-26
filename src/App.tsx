@@ -10,6 +10,7 @@ import ExperienceFields from './components/ExperienceFields';
 import EducationFields from './components/EducationFields';
 import ProjectFields from './components/ProjectFields';
 import SkillFields from './components/SkillFields';
+import FloatingActionButton from './components/FloatingActionButton';
 
 // 导入工具函数
 import { exportResumeToPDF } from './utils/pdfExport';
@@ -75,6 +76,14 @@ function App() {
       setLoading(false);
     }
   };
+
+  // 导入简历数据
+  const handleImportData = (importedData: ResumeData) => {
+    // 设置表单值
+    form.setFieldsValue(importedData);
+    // 更新预览数据
+    setPreviewData(importedData);
+  };
   
   // 默认表单值
   const defaultValues: ResumeData = {
@@ -119,17 +128,11 @@ function App() {
   
   return (
     <div className="app">
-      {/* 导出按钮 */}
-      <div className="export-button">
-        <Button 
-          type="primary" 
-          icon={<DownloadOutlined />} 
-          onClick={exportPDF}
-          loading={loading}
-        >
-          导出PDF
-        </Button>
-      </div>
+      {/* 悬浮球组件 */}
+      <FloatingActionButton 
+        resumeData={previewData}
+        onImportData={handleImportData}
+      />
       
       <div className="resume-container">
         {/* 左边编辑区 */}

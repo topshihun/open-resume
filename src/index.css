@@ -21,11 +21,11 @@ body {
   position: relative;
 }
 
-/* 导出按钮 */
-.export-button {
+/* 悬浮球组件样式 */
+.floating-action-button {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  right: 24px;
+  bottom: 24px;
   z-index: 1000;
 }
 

@@ -12,19 +12,26 @@ export const exportResumeToPDF = async (): Promise<void> => {
       throw new Error('预览内容未找到');
     }
 
-    // 创建临时的A4容器用于PDF导出
+    // 创建临时的A4容器用于PDF导出，保持与预览一致的样式
     const tempContainer = document.createElement('div');
     tempContainer.style.width = '210mm';
     tempContainer.style.minHeight = '297mm';
-    tempContainer.style.padding = '15mm';
-    tempContainer.style.boxSizing = 'border-box';
     tempContainer.style.background = 'white';
+    tempContainer.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+    tempContainer.style.margin = '0 auto';
+    tempContainer.style.overflow = 'visible';
     tempContainer.style.fontFamily = 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif';
     tempContainer.style.fontSize = '14px';
     tempContainer.style.lineHeight = '1.5';
     
-    // 复制内容到临时容器
-    tempContainer.innerHTML = content.innerHTML;
+    // 创建内容容器，保持与预览一致的内边距
+    const contentWrapper = document.createElement('div');
+    contentWrapper.style.padding = '15mm';
+    contentWrapper.style.boxSizing = 'border-box';
+    
+    // 复制内容到内容容器
+    contentWrapper.innerHTML = content.innerHTML;
+    tempContainer.appendChild(contentWrapper);
     
     // 添加到DOM进行渲染
     tempContainer.style.position = 'absolute';

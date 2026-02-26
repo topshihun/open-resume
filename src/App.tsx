@@ -13,7 +13,7 @@ import SkillFields from './components/SkillFields';
 
 // 导入工具函数
 import { exportResumeToPDF } from './utils/pdfExport';
-import { checkContentExceedsLimit } from './utils/contentHeightCalculator';
+import { checkContentExceedsLimitComprehensive } from './utils/contentHeightCalculator';
 import { generatePreviewHTML } from './utils/htmlGenerator';
 
 // 导入类型定义
@@ -36,8 +36,27 @@ function App() {
   // 实时更新预览数据并检查内容长度
   const handleFormChange = (_: any, allValues: ResumeData) => {
     setPreviewData(allValues);
-    setContentExceedsLimit(checkContentExceedsLimit(allValues));
+    setContentExceedsLimit(checkContentExceedsLimitComprehensive(allValues));
   };
+  
+  // 实时监测渲染高度
+  useEffect(() => {
+    if (!contentExceedsLimit) {
+      // 延迟检查，确保DOM已渲染完成
+      const timer = setTimeout(() => {
+        const previewElement = document.getElementById('a4-preview-content');
+        if (previewElement) {
+          // 使用综合检查方法进行精确验证
+          const exceeds = checkContentExceedsLimitComprehensive(previewData);
+          if (exceeds !== contentExceedsLimit) {
+            setContentExceedsLimit(exceeds);
+          }
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [previewData, contentExceedsLimit]);
   
   // 初始加载时获取一次值
   useEffect(() => {
